@@ -5,15 +5,22 @@ import axios from 'axios'
 export default function App() {
 
   const [username , setUsername] = useState("");
+  const [userdata , setUserdata] = useState(null);
+  const [error , setError] = useState("");
+
+
 
   const handleClick =  async function fetchData(){
     try {
 
       const url = await axios.get(`https://api.github.com/users/${username}`);
+      setUserdata(url.data);
       console.log(url.data);
       
     } catch (error) {
-      console.log(error.message);
+      setUserdata(null);
+      setError("\n"+error.message);
+
     }
   }
 
@@ -31,11 +38,38 @@ export default function App() {
             />
             <button onClick={handleClick}
             className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>Search</button>
+
+           
           </div>
 
+           {error && (<p> {error} </p>)}
 
+          { 
+            userdata && (
+
+            <div className='mt-6 bg-white flex flex-col  items-center justify-center shadow-md p-6 rounded-2-xl w-full max-w-sm mx-auto text-center'>
+                <a href={userdata.html_url}>
+                  <img src={userdata.avatar_url} alt="user profile image" 
+                className='w-32 h-32 rounded-full'/>
+                </a>
+                <h2>{userdata.name || userdata.login}</h2>
+                <p className='text-gray-600'> Joined : {new Date(userdata.created_at).toLocaleDateString()} </p>
+                <p className='text-gray-600'>{userdata.bio}</p>
+
+                <a href={userdata.html_url}
+                className='mt-3 bg-green-600 p-3 rounded-lg  px-4 text-white hover:bg-green-700'>
+                  Visit Profile
+                </a>
+
+
+            </div>
+            )
+          }
 
       </div>
+
+
+      
 
     </div>
   )
