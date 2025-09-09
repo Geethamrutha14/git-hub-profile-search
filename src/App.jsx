@@ -47,7 +47,7 @@ export default function App() {
           { 
             userdata && (
 
-            <div className='mt-6 bg-white flex flex-col  items-center justify-center shadow-md p-6 rounded-2-xl w-full max-w-sm mx-auto text-center'>
+            <div className='mt-6 bg-white flex flex-col  items-center justify-center shadow-lg p-6 rounded-lg w-full max-w-sm mx-auto text-center'>
                 <a href={userdata.html_url}>
                   <img src={userdata.avatar_url} alt="user profile image" 
                 className='w-32 h-32 rounded-full'/>
@@ -56,7 +56,9 @@ export default function App() {
                 <p className='text-gray-600'> Joined : {new Date(userdata.created_at).toLocaleDateString()} </p>
                 <p className='text-gray-600'>{userdata.bio}</p>
 
-                <a href={userdata.html_url}
+                <a href={userdata.html_url }
+                rel='noreferrer'
+                target='_blank'
                 className='mt-3 bg-green-600 p-3 rounded-lg  px-4 text-white hover:bg-green-700'>
                   Visit Profile
                 </a>
