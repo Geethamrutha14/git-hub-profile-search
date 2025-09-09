@@ -7,37 +7,38 @@ export default function App() {
   const [username , setUsername] = useState("");
 
   const handleClick =  async function fetchData(){
-
-    const options = {
-    method: 'GET',
-    url: 'https://github-profiles-trending-developers-repositories-scrapping.p.rapidapi.com/profiles',
-    params: {
-      profileUrl: `https://github.com/${username}`
-    },
-    headers: {
-      'x-rapidapi-key': import.meta.env.VITE_RAPIDAPI_KEY,
-      'x-rapidapi-host': 'github-profiles-trending-developers-repositories-scrapping.p.rapidapi.com'
-    }
-  };
-
     try {
-	    const response = await axios.request(options);
-	    console.log(response.data);
-    } catch (error) {
-	    console.error(error);
-    }
 
+      const url = await axios.get(`https://api.github.com/users/${username}`);
+      console.log(url.data);
+      
+    } catch (error) {
+      console.log(error.message);
+    }
   }
+
+
   return (
     <div>
 
-      <h1>GitHub Profile Search</h1>
+      <div className='bg-gray-100 min-h-screen flex flex-col items-center p-6'>
+          <h1 className='text-2xl md:text-4xl mb-6 font-bold text-center p-4'>GitHub Profile Search</h1>
 
-      <div>
-        <input type="text" placeholder='Enter Username...' onChange={(e)=> setUsername(e.target.value)}/>
-        <button onClick={handleClick}>Search</button>
+          <div className='flex flex-col sm:flex-row gap-2 w-full max-w-md mx-auto '>
+            <input type="text" placeholder='Enter Username...' 
+            className='flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
+            onChange={(e)=> setUsername(e.target.value)}
+            />
+            <button onClick={handleClick}
+            className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>Search</button>
+          </div>
+
+
+
       </div>
 
     </div>
   )
 }
+
+
