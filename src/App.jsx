@@ -4,8 +4,8 @@ import axios from 'axios'
 
 export default function App() {
 
-  const [username , setUsername] = useState("");
-  const [userdata , setUserdata] = useState(null);
+  const [query , setQuery] = useState("");
+  // const [userdata , setUserdata] = useState(null);
   const [error , setError] = useState("");
 
 
@@ -13,12 +13,12 @@ export default function App() {
   const handleClick =  async function fetchData(){
     try {
 
-      const url = await axios.get(`https://api.github.com/users/${username}`);
-      setUserdata(url.data);
+      const url = await axios.get(`https://api.github.com/search/users?q=${query}`);
+      // setUserdata(url.data);
       console.log(url.data);
       
     } catch (error) {
-      setUserdata(null);
+      // setUserdata(null);
       setError("\n"+error.message);
 
     }
@@ -34,7 +34,7 @@ export default function App() {
           <div className='flex flex-col sm:flex-row gap-2 w-full max-w-md mx-auto '>
             <input type="text" placeholder='Enter Username...' 
             className='flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
-            onChange={(e)=> setUsername(e.target.value)}
+            onChange={(e)=> setQuery(e.target.value)}
             />
             <button onClick={handleClick}
             className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>Search</button>
@@ -44,7 +44,7 @@ export default function App() {
 
            {error && (<p> {error} </p>)}
 
-          { 
+          {/* { 
             userdata && (
 
             <div className='mt-6 bg-white flex flex-col  items-center justify-center shadow-lg p-6 rounded-lg w-full max-w-sm mx-auto text-center'>
@@ -66,7 +66,7 @@ export default function App() {
 
             </div>
             )
-          }
+          } */}
 
       </div>
 
