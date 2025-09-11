@@ -69,7 +69,9 @@ export default function App() {
             )
           } */}
 
-          <SearchResults results={results}/>
+          {
+            query.length === 0 ? <p></p> : <SearchResults results={results}/>
+          }
 
           
 

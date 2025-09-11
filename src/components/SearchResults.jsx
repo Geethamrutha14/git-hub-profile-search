@@ -10,7 +10,7 @@ export default function SearchResults({results}){
                         <div className="flex-1">
 
                             <h2 className="font-semibold text-lg">{user.login}</h2>
-                            <a href={user.html_url} className="font-sans text-gray-600 hover:underline to-blue-300"
+                            <a href={user.html_url} className="font-sans text-md text-gray-600 hover:text-blue-600 "
                             target="_blank" > View Profile </a>
 
                         </div>
