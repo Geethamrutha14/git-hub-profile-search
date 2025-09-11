@@ -1,11 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
+import SearchResults from './components/SearchResults';
 
 export default function App() {
 
   const [query , setQuery] = useState("");
-  // const [userdata , setUserdata] = useState(null);
+  const [results , setResults] = useState([]);
   const [error , setError] = useState("");
 
 
@@ -14,12 +15,12 @@ export default function App() {
     try {
 
       const url = await axios.get(`https://api.github.com/search/users?q=${query}`);
-      // setUserdata(url.data);
-      console.log(url.data);
+      setResults(url.data.items || []);
+      setError("");
       
     } catch (error) {
-      // setUserdata(null);
-      setError("\n"+error.message);
+      setError("No User Found"+"\n"+error.message);
+      setResults([]);
 
     }
   }
@@ -67,6 +68,10 @@ export default function App() {
             </div>
             )
           } */}
+
+          <SearchResults results={results}/>
+
+          
 
       </div>
 
