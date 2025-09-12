@@ -1,29 +1,58 @@
-import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
+import SearchResults from './components/SearchResults';
+import { useEffect } from 'react';
+import { LoaderCircle } from 'lucide-react';
+
 
 export default function App() {
 
-  const [username , setUsername] = useState("");
-  const [userdata , setUserdata] = useState(null);
+  const [query , setQuery] = useState("");
+  const [results , setResults] = useState([]);
   const [error , setError] = useState("");
+  const [loading , setLoading] = useState(false);
 
-
-
-  const handleClick =  async function fetchData(){
+  const handleClick =  async ()=> {
+    if(query.trim() === ""){
+      setLoading(false);
+      setResults([]);
+      setError("");
+      return;
+    }
     try {
-
-      const url = await axios.get(`https://api.github.com/users/${username}`);
-      setUserdata(url.data);
-      console.log(url.data);
+      setLoading(true);
+      const url = await axios.get(`https://api.github.com/search/users?q=${query}`);
+      setResults(url.data.items || []);
+      setError("");
       
     } catch (error) {
-      setUserdata(null);
-      setError("\n"+error.message);
-
+      setError("No User Found"+"\n"+error.message);
+      setResults([]);
+    }
+    finally{
+      setLoading(false);
     }
   }
 
+  const handleSearchClick = ()=> {
+    handleClick();
+  }
+
+  useEffect(()=>{
+    if(query.trim() === ""){
+      setResults([]);
+      setError("");
+      return;
+    }
+    
+    const delay = setTimeout( ()=>{
+      handleClick()
+    } , 500)
+
+    return ()=> clearTimeout(delay)
+
+
+  },[query]);
 
   return (
     <div>
@@ -34,39 +63,26 @@ export default function App() {
           <div className='flex flex-col sm:flex-row gap-2 w-full max-w-md mx-auto '>
             <input type="text" placeholder='Enter Username...' 
             className='flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500'
-            onChange={(e)=> setUsername(e.target.value)}
+            onChange={(e)=> setQuery(e.target.value)}
             />
-            <button onClick={handleClick}
-            className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>Search</button>
+            <button onClick={handleSearchClick}
+            className='px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition'>
+              {
+                loading ? <LoaderCircle className='w-5 h-5 animate-spin'/> : "Search"
+              }
+            </button>
 
            
           </div>
 
            {error && (<p> {error} </p>)}
+  
 
-          { 
-            userdata && (
-
-            <div className='mt-6 bg-white flex flex-col  items-center justify-center shadow-lg p-6 rounded-lg w-full max-w-sm mx-auto text-center'>
-                <a href={userdata.html_url}>
-                  <img src={userdata.avatar_url} alt="user profile image" 
-                className='w-32 h-32 rounded-full'/>
-                </a>
-                <h2>{userdata.name || userdata.login}</h2>
-                <p className='text-gray-600'> Joined : {new Date(userdata.created_at).toLocaleDateString()} </p>
-                <p className='text-gray-600'>{userdata.bio}</p>
-
-                <a href={userdata.html_url }
-                rel='noreferrer'
-                target='_blank'
-                className='mt-3 bg-green-600 p-3 rounded-lg  px-4 text-white hover:bg-green-700'>
-                  Visit Profile
-                </a>
-
-
-            </div>
-            )
+          {
+            query.length === 0 ? <p></p> : <SearchResults results={results}/>
           }
+
+          
 
       </div>
 
